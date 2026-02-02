@@ -1,19 +1,25 @@
 from confluent_kafka import Producer
 import requests
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Kafka Producer Configuration
 producer_config = {
-    'bootstrap.servers': 'pkc-p11xm.us-east-1.aws.confluent.cloud:9092',
+    'bootstrap.servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS'),
     'security.protocol': 'SASL_SSL',
     'sasl.mechanism': 'PLAIN',
-    'sasl.username': 'KFWWR6X3DXE5KGYE',
-    'sasl.password': 'oZ9Lfj55x8QBRJacpvryymQYTFnfauzg0x3cyjT4rlo/a1G5zBqvum5KR572NJa7'
+    'sasl.username': os.getenv('KAFKA_SASL_USERNAME'),
+    'sasl.password': os.getenv('KAFKA_SASL_PASSWORD')
 }
 producer = Producer(**producer_config)
 
 # Fetch stock data
-URL = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo'
+API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY')
+SYMBOL = 'IBM'
+URL = f'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={SYMBOL}&interval=5min&apikey={API_KEY}'
 response = requests.get(URL)
 data = response.json()
 

@@ -1,15 +1,19 @@
 from confluent_kafka import Consumer, KafkaException, KafkaError
 import json
 import psycopg2
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Kafka Consumer Configuration
 consumer_config = {
-    'bootstrap.servers': 'pkc-p11xm.us-east-1.aws.confluent.cloud:9092',
+    'bootstrap.servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS'),
     'security.protocol': 'SASL_SSL',
     'sasl.mechanism': 'PLAIN',
-    'sasl.username': 'KFWWR6X3DXE5KGYE',
-    'sasl.password': 'oZ9Lfj55x8QBRJacpvryymQYTFnfauzg0x3cyjT4rlo/a1G5zBqvum5KR572NJa7',
-    'group.id': 'lkc-1y5rp3', #cluster_id
+    'sasl.username': os.getenv('KAFKA_SASL_USERNAME'),
+    'sasl.password': os.getenv('KAFKA_SASL_PASSWORD'),
+    'group.id': os.getenv('KAFKA_GROUP_ID'),
     'auto.offset.reset': 'earliest'
 }
 
@@ -22,11 +26,11 @@ consumer.subscribe([topic])
 
 # PostgreSQL Connection Details
 db_config = {
-    'dbname': 'defaultdb',
-    'user': 'avnadmin',
-    'password': 'AVNS_0moofrzCLOUx5s4CUi8',
-    'host': 'pg-4c0d3de-mugendijames341-7875.f.aivencloud.com',
-    'port': 19572
+    'dbname': os.getenv('DB_NAME'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'host': os.getenv('DB_HOST'),
+    'port': os.getenv('DB_PORT')
 }
 
 # Connect to PostgreSQL Database
